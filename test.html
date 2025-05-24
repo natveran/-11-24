@@ -1,209 +1,293 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Тест Шкала депрессии Бека</title>
-<link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест на уровень депрессии</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        .question-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: none;
+        }
+        .question-container.active {
+            display: block;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .option {
+            margin: 15px 0;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            position: relative;
+            padding-left: 40px;
+        }
+        .option:hover {
+            background: #e9e9e9;
+        }
+        .option input {
+            position: absolute;
+            left: 10px;
+            top: 15px;
+            cursor: pointer;
+        }
+        button {
+            padding: 12px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        #result-container {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .result-score {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .diagnosis {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .mild {
+            background-color: #FFF3CD;
+            color: #856404;
+        }
+        .moderate {
+            background-color: #FFE0A3;
+            color: #D35400;
+        }
+        .severe {
+            background-color: #F8D7DA;
+            color: #721C24;
+        }
+        .progress-bar {
+            height: 5px;
+            background: #e0e0e0;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .progress {
+            height: 100%;
+            background: #4CAF50;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .option-text {
+            display: inline-block;
+            vertical-align: middle;
+            width: calc(100% - 30px);
+        }
+    </style>
 </head>
 <body>
-<div id="instructionSection">
-  <h1>Тест по шкале депрессии Бека</h1>  
-  <h1>Инструкция</h1>
-    <p> В этом опроснике содержатся группы утверждений. Внимательно прочитайте каждую группу утверждений. Затем определите в каждой группе одно
-утверждение, которое лучше всего соответствует тому, как Вы себя чувствовали НА
-ЭТОЙ НЕДЕЛЕ И СЕГОДНЯ. Поставьте галочку около выбранного утверждения. Если
-несколько утверждений из одной группы кажутся Вам одинаково хорошо подходящими,
-то поставьте галочки около каждого из них. Прежде, чем сделать свой выбор,
-убедитесь, что Вы прочли все утверждения в каждой группе</p>
-    <button onclick="startTest()">Начать тестирование</button>
-  </div>
-
-<style>
-  /* Стили для скрытия разделов */
-  #depressionTest, #result {
-    display: none;
-  }
-</style>
-
-<div class="test-container">
- 
-  <form id="depressionTest">
-    <h1>Тест по шкале депрессии Бека</h1>
-  <!-- Вопрос 1 -->
-    <div class="question">
-      <h3>1. Я чувствовал(а) себя подавленным(ой) или грустным(ой):</h3>
-      <div class="answers">
-        <label><input type="radio" name="q1" value="0" required /> Не испытывал(а)</label>
-        <label><input type="radio" name="q1" value="1" /> Несколько дней</label>
-        <label><input type="radio" name="q1" value="2" /> Более половины дней</label>
-        <label><input type="radio" name="q1" value="3" /> Почти каждый день</label>
-      </div>
+    <div class="progress-bar">
+        <div class="progress" id="progress"></div>
     </div>
 
-    <!-- Вопрос 2 -->
-    <div class="question">
-      <h3>2. Я чувствовал(а) усталость или потерю энергии:</h3>
-      <div class="answers">
-        <label><input type="radio" name="q2" value="0" required /> Не испытывал(а)</label>
-        <label><input type="radio" name="q2" value="1" /> Несколько дней</label>
-        <label><input type="radio" name="q2" value="2" /> Более половины дней</label>
-        <label><input type="radio" name="q2" value="3" /> Почти каждый день</label>
-      </div>
+    <!-- Контейнеры с вопросами -->
+    <div id="question1" class="question-container active">
+        <div class="question">1. Я не чувствую себя расстроенным, печальным.</div>
+        <label class="option">
+            <input type="radio" name="q1" value="0">
+            <span class="option-text">0 - Я не чувствую себя расстроенным, печальным.</span>
+        </label>
+        <label class="option">
+            <input type="radio" name="q1" value="1">
+            <span class="option-text">1 - Я расстроен.</span>
+        </label>
+        <label class="option">
+            <input type="radio" name="q1" value="2">
+            <span class="option-text">2 - Я все время расстроен и не могу от этого отключиться.</span>
+        </label>
+        <label class="option">
+            <input type="radio" name="q1" value="3">
+            <span class="option-text">3 - Я настолько расстроен и несчастлив, что не могу это выдержать.</span>
+        </label>
+        <button onclick="nextQuestion(1)">Далее</button>
     </div>
 
-    <!-- Вопрос 3 -->
-    <div class="question">
-      <h3>3. Я испытывал(а) чувство безнадежности:</h3>
-      <div class="answers">
-        <label><input type="radio" name="q3" value="0" required /> Не испытывал(а)</label>
-        <label><input type="radio" name="q3" value="1" /> Несколько дней</label>
-        <label><input type="radio" name="q3" value="2" /> Более половины дней</label>
-        <label><input type="radio" name="q3" value="3" /> Почти каждый день</label>
-      </div>
+    <!-- Остальные вопросы (шаблон аналогичный) -->
+    <div id="question2" class="question-container">
+        <div class="question">2. Я не тревожусь о своем будущем.</div>
+        <label class="option">
+            <input type="radio" name="q2" value="0">
+            <span class="option-text">0 - Я не тревожусь о своем будущем.</span>
+        </label>
+        <label class="option">
+            <input type="radio" name="q2" value="1">
+            <span class="option-text">1 - Я чувствую, что озадачен будущим.</span>
+        </label>
+        <label class="option">
+            <input type="radio" name="q2" value="2">
+            <span class="option-text">2 - Я чувствую, что меня ничего не ждет в будущем.</span>
+        </label>
+        <label class="option">
+            <input type="radio" name="q2" value="3">
+            <span class="option-text">3 - Мое будущее безнадежно, и ничто не может измениться к лучшему.</span>
+        </label>
+        <button onclick="nextQuestion(2)">Далее</button>
+    </div>
+    
+    <div id="question3" class="question-container">
+        <div class="question">2. Я не чувствую себя неудачником. </div>
+        <label class="option">
+            <input type="radio" name="q2" value="0">
+            <span class="option-text">0 - Я не чувствую себя неудачником. </span>
+        </label>
+        <label class="option">
+            <input type="radio" name="q2" value="1">
+            <span class="option-text">1 -  Я чувствую, что терпел больше неудач, чем другие люди</span>
+        </label>
+        <label class="option">
+            <input type="radio" name="q2" value="2">
+            <span class="option-text">2 -Когда я оглядываюсь на свою жизнь, я вижу в ней много не</span>
+        </label>
+        <label class="option">
+            <input type="radio" name="q2" value="3">
+            <span class="option-text">3 - Я чувствую, что как личность я - полный неудачник.</span>
+        </label>
+        <button onclick="showResults()">Завершить тестирование</button>
     </div>
 
-    <!-- Вопрос 4 -->
-    <div class="question">
-      <h3>4. Я испытывал(а) снижение аппетита или переедание:</h3>
-      <div class="answers">
-        <label><input type="radio" name="q4" value="0" required /> Не испытывал(а)</label>
-        <label><input type="radio" name="q4" value="1" /> Несколько дней</label>
-        <label><input type="radio" name="q4" value="2" /> Более половины дней</label>
-        <label><input type="radio" name="q4" value="3" /> Почти каждый день</label>
-      </div>
+    <!-- Контейнер с результатами -->
+    <div id="result-container">
+        <h2>Результаты теста</h2>
+        <div class="result-score">Ваш результат: <span id="total-score">0</span> баллов</div>
+        <div class="diagnosis" id="diagnosis-text">Результат</div>
+        <p id="result-description">Описание результата</p>
+        <button onclick="restartTest()">Пройти тест снова</button>
     </div>
 
-    <!-- Вопрос 5 -->
-    <div class="question">
-      <h3>5. Я чувствовал(а) плохое настроение или уныние:</h3>
-      <div class="answers">
-        <label><input type="radio" name="q5" value="0" required /> Не испытывал(а)</label>
-        <label><input type="radio" name="q5" value="1" /> Несколько дней</label>
-        <label><input type="radio" name="q5" value="2" /> Более половины дней</label>
-        <label><input type="radio" name="q5" value="3" /> Почти каждый день</label>
-      </div>
-    </div>
-
-    <!-- Вопрос 6 -->
-    <div class="question">
-      <h3>6. Я испытывал(а) трудности с концентрацией внимания:</h3>
-      <div class="answers">
-        <label><input type="radio" name="q6" value="0" required /> Не испытывал(а)</label>
-        <label><input type="radio" name="q6" value="1" /> Несколько дней</label>
-        <label><input type="radio" name="q6" value="2" /> Более половины дней</label>
-        <label><input type="radio" name="q6" value="3" /> Почти каждый день</label>
-      </div>
-    </div>
-
-    <!-- Вопрос 7 -->
-    <div class="question">
-      <h3>7. Я чувствовал(а) тревогу или нервозность:</h3>
-      <div class="answers">
-        <label><input type="radio" name="q7" value="0" required /> Не испытывал(а)</label>
-        <label><input type="radio" name="q7" value="1" /> Несколько дней</label>
-        <label><input type="radio" name="q7" value="2" /> Более половины дней</label>
-        <label><input type="radio" name="q7" value="3" /> Почти каждый день</label>
-      </div>
-    </div>
-
-    <!-- Вопрос 8 -->
-    <div class="question">
-      <h3>8. Я чувствовал(а) потерю интереса к деятельности:</h3>
-      <div class="answers">
-        <label><input type="radio" name="q8" value="0" required /> Не испытывал(а)</label>
-        <label><input type="radio" name="q8" value="1" /> Несколько дней</label>
-        <label><input type="radio" name="q8" value="2" /> Более половины дней</label>
-        <label><input type="radio" name="q8" value="3" /> Почти каждый день</label>
-      </div>
-    </div>
-
-    <!-- Вопрос 9 -->
-    <div class="question">
-      <h3>9. Я чувствовал(а) раздражение или злость:</h3>
-      <div class="answers">
-        <label><input type="radio" name="q9" value="0" required /> Не испытывал(а)</label>
-        <label><input type="radio" name="q9" value="1" /> Несколько дней</label>
-        <label><input type="radio" name="q9" value="2" /> Более половины дней</label>
-        <label><input type="radio" name="q9" value="3" /> Почти каждый день</label>
-      </div>
-    </div>
-
-    <!-- Вопрос 10 -->
-    <div class="question">
-      <h3>10. Я чувствовал(а) чувство вины или никчемности:</h3>
-      <div class="answers">
-        <label><input type="radio" name="q10" value="0" required /> Не испытывал(а)</label>
-        <label><input type="radio" name="q10" value="1" /> Несколько дней</label>
-        <label><input type="radio" name="q10" value="2" /> Более половины дней</label>
-        <label><input type="radio" name="q10" value="3" /> Почти каждый день</label>
-      </div>
-    </div>
-
-    <button type="submit">Подсчитать результат</button>
-  </form>
-  <div id="result"></div>
-</div>
-
-  <script>
-    function startTest() {
-      document.getElementById("instructionSection").style.display = "none";
-      document.getElementById("depressionTest").style.display = "block";
-    }
-
-    function showResults() {
-      let totalScore = 0;
-
-      // Считаем результат
-      totalScore += parseInt(document.querySelector('input[name="q1"]:checked').value);
-      // Считаем остальные ответы тут
-      totalScore += parseInt(document.querySelector('input[name="q2"]:checked').value);
-      // ... остальные вопросы
-
-      let interpretation = "";
-      if (totalScore <= 9) {
-        interpretation = "отсутствие депрессивных симптомов";
-      } else if (totalScore <= 15) {
-        interpretation = "легкая депрессия (субдепрессия)";
-      } else if (totalScore <= 19) {
-        interpretation = "умеренная депрессия";
-      } else if (totalScore <= 29) {
-        interpretation = "выраженная депрессия (средняя или умеренно тяжелая)";
-      } else {
-        interpretation = "тяжелая депрессия";
-      }
-
-      // Отображаем результат и интерпретацию
-      document.getElementById("question").style.display = "none";
-      document.getElementById("resultsSection").style.display = "block";
-      document.getElementById("score").innerText = "Ваш результат: " + totalScore;
-      document.getElementById("interpretation").innerText = "Интерпретация: " + interpretation;
+    <script>
       
-       async function saveResult() {
-            const score = document.getElementById('score').value;
-            const response = await fetch('/api/save-result', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ score: parseInt(score) })
-            });
-            alert('Результат сохранен!');
-        }
-        
-        async function result() {
-            const response = await fetch('/api/result');
-            const data = await response.json();
-            
-            const resultDiv = document.getElementById('result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = `
-                <h3>Ваш результат: ${data.score} баллов</h3>
-                <p><strong>Диагноз:</strong> ${data.diagnosis}</p>
-            `;
-        }
-    }
-  </script>
+        // Храним ответы пользователя
+        const answers = {};
+        const totalQuestions = 3; // Измените на 6 для полного теста
 
+        // Переход к следующему вопросу
+        function nextQuestion(currentQuestion) {
+            const selectedOption = document.querySelector(`input[name="q${currentQuestion}"]:checked`);
+            
+            if (!selectedOption) {
+                alert("Пожалуйста, выберите вариант ответа");
+                return;
+            }
+
+            // Сохраняем ответ
+            answers[`q${currentQuestion}`] = parseInt(selectedOption.value);
+            
+            // Скрываем текущий вопрос
+            document.getElementById(`question${currentQuestion}`).classList.remove('active');
+            
+            // Показываем следующий вопрос или результаты
+            if (currentQuestion < totalQuestions) {
+                document.getElementById(`question${currentQuestion + 1}`).classList.add('active');
+            } else {
+                showResults();
+            }
+            
+            // Обновляем прогресс-бар
+            updateProgress(currentQuestion);
+        }
+
+        // Обновление прогресс-бара
+        function updateProgress(currentQuestion) {
+            const progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+        }
+
+        // Показать результаты
+        function showResults() {
+            // Подсчет общего балла
+            let totalScore = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                totalScore += answers[`q${i}`] || 0;
+            }
+            
+            // Определение результата
+            let diagnosis, description;
+            if (totalScore <= 9) {
+                diagnosis = "Отсутствие депрессии";
+                description = "Ваши результаты не указывают на наличие депрессивных симптомов.";
+            } else if (totalScore <= 15) {
+                diagnosis = "Легкая депрессия";
+                description = "У вас могут быть некоторые симптомы депрессии. Рекомендуется обратить внимание на свое эмоциональное состояние.";
+            } else if (totalScore <= 19) {
+                diagnosis = "Умеренная депрессия";
+                description = "Ваши результаты указывают на умеренные симптомы депрессии. Возможно, вам стоит обратиться к специалисту.";
+            } else {
+                diagnosis = "Тяжелая депрессия";
+                description = "Ваши результаты указывают на выраженные симптомы депрессии. Рекомендуется обратиться за профессиональной помощью.";
+            }
+            
+            // Показываем результаты
+            document.getElementById('question3').style.display = 'none';
+    
+            document.getElementById('total-score').textContent = totalScore;
+            document.getElementById('diagnosis-text').textContent = diagnosis;
+            document.getElementById('diagnosis-text').className = 'diagnosis ' + 
+                (totalScore <= 9 ? 'mild' : 
+                 totalScore <= 15 ? 'moderate' : 'severe');
+            document.getElementById('result-description').textContent = description;
+            document.getElementById('result-container').style.display = 'block';
+        }
+
+        // Начать тест заново
+        function restartTest() {
+            // Сбрасываем ответы
+            for (let i = 1; i <= totalQuestions; i++) {
+                const radios = document.getElementsByName(`q${i}`);
+                for (let radio of radios) {
+                    radio.checked = false;
+                }
+            }
+            
+            // Скрываем результаты
+            document.getElementById('result-container').style.display = 'none';
+            
+            // Показываем первый вопрос
+            document.getElementById('question1').classList.add('active');
+            for (let i = 2; i <= totalQuestions; i++) {
+                document.getElementById(`question${i}`).classList.remove('active');
+            }
+            
+            // Сбрасываем прогресс-бар
+            document.getElementById('progress').style.width = '0%';
+        }
+    </script>
 </body>
 </html>
-
-
