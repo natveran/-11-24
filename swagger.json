@@ -1,0 +1,61 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Тест на депрессию",
+    "version": "1.0.0",
+    "description": "API для определения уровня депрессии по шкале"
+  },
+  "paths": {
+    "/api/save-result": {
+      "post": {
+        "summary": "Сохранить результат теста",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "score": {
+                    "type": "integer",
+                    "description": "Количество баллов по тесту"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Результат сохранен"
+          }
+        }
+      }
+    },
+    "/api/get-result": {
+      "get": {
+        "summary": "Получить результат теста",
+        "responses": {
+          "200": {
+            "description": "Результат теста",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "score": {
+                      "type": "integer"
+                    },
+                    "diagnosis": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

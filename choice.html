@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Мои тесты</title>
+
+<!-- Подключение Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+<!-- Подключение шрифта Comfortaa -->
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet" />
+
+<!-- Внешний CSS -->
+<link rel="stylesheet" href="style.css" />
+
+<!-- Внутренние стили -->
+<style>
+
+  /* Стиль для блока заголовков */
+  .header {
+    display: flex;
+    flex-direction: column;       /* вертикальное расположение */
+    align-items: center;          /* по центру */
+    margin-top: 20px;
+  }
+
+  /* Стиль для заголовка "Мои тесты" */
+  .header h1 {
+    font-family: 'Comfortaa', Arial, sans-serif;
+    font-size: 48px;
+    margin: 0;
+    text-align: center;
+  }
+
+  /* Стиль для текста "Нет пройденных тестов" */
+  .header p {
+    font-family: 'Comfortaa', Arial, sans-serif;
+    font-size: 25px;
+    margin: 10px 0 0 0;
+    text-align: center;
+  }
+
+ /* Карточка */
+/* Карточка */
+.card {
+  max-width: 100%;
+  width: 450px;
+  height: 125px;
+  margin: 20px auto;
+  background-color: rgba(176, 160, 224, 1);
+  border-radius: 45px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  padding: 15px;
+
+  display:flex; 
+  align-items:center; /* вертикальное центрирование содержимого */
+  justify-content:center; /* горизонтальное центрирование содержимого */
+  
+  cursor:pointer;
+  transition: box-shadow 0.3s ease;
+  
+  box-sizing:border-box;
+}
+.card:hover,
+.card.selected {
+  background-color : rgba(144,128,208,1);
+  }
+/* Внутренний блок с текстом и стрелкой */
+.card-inner {
+    display:flex; 
+    align-items:center; 
+    justify-content:center; /* по желанию, чтобы содержимое было по центру внутри */
+    width:100%;
+    height:100%; /* занимает всю высоту карточки */
+}
+
+/* Текст внутри карточки */
+.card-title {
+    font-size:25px;
+    color:#fff;
+    margin:0; /* убираем лишние отступы */
+    padding:0;
+
+}
+
+/* Иконка стрелки справа */
+.arrow-icon {
+    margin-left:15px; /* Расстояние между текстом и стрелкой */
+    color: #fff;
+}
+
+/* Нижняя панель с иконками без фона */
+.bottom-nav {
+  display:flex; 
+  justify-content:space-around; 
+  align-items:center; 
+  width:100%; 
+  position:fixed; 
+  bottom:0; 
+  left:0; 
+  right:0; 
+  background:transparent; /* прозрачный фон */
+  padding:10px 0;
+}
+
+/* Кнопки-иконки */
+.icon-btn {
+   background:none; 
+   border:none; 
+   cursor:pointer; 
+   padding:10px; 
+   font-size:24px; 
+   color:#333; 
+   transition:.2s all ease-in-out;
+}
+
+.icon-btn:hover,
+.icon-btn :active { /* можно оставить так для эффекта наведения и нажатия одновременно */   
+   background-color : rgba(144,128,208,1);
+}
+</style>
+</head>
+<body>
+
+<!-- Заголовок и подзаголовок, выравненные по центру -->
+<div class="header">
+<h1>Мои тесты</h1>
+<p>Нет пройденных тестов</p>
+</div>
+
+<!-- Карточка с центровкой текста -->
+<div class="card" onclick="goToTest()">
+ <div class="card-inner">
+   <div class="card-title">Шкала депрессии Бека</div>
+   <div class="arrow-icon">
+     <i class="fas fa-arrow-right"></i>
+   </div>
+ </div>
+</div>
+
+<!-- Нижняя панель с иконками без фона -->
+<div class="bottom-nav">
+ <button class="icon-btn"><i class="fas fa-cog"></i></button>
+ <button class="icon-btn"><i class="fas fa-search"></i></button>
+ <button class="icon-btn"><i class="fas fa-user"></i></button>
+</div>
+
+<script>
+    function goToTest() {
+      window.location.href = 'test.html'; // Или любое другое имя файла
+    }
+  </script>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
