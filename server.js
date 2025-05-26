@@ -1,49 +1,98 @@
+// server.js
+
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
-const fs = require('fs');
+const swaggerJsdoc = require('swagger-jsdoc');
+const cors = require('cors');
 
 const app = express();
+const port = 3000;
+
 app.use(express.json());
-app.use(express.static('public'));
+app.use(cors());
 
-// Загружаем Swagger описание
-const swaggerDocument = require('./swagger.json');
+// Swagger конфигурация
+const swaggerDefinition = {
+  openapi: '3.0.0',
+  info: {
+    title: 'API теста депрессии Бека',
+    version: '1.0.0',
+    description: 'Подсчет баллов и интерпретация теста Бека.',
+  },
+};
 
-// Данные теста
-let testResult = null;
+const options = {
+  swaggerDefinition,
+  apis: ['./server.js'], // путь к этому же файлу
+};
 
-// API для сохранения результата
-app.post('/api/save-result', (req, res) => {
-  testResult = req.body.score;
-  res.json({ message: 'Результат сохранен' });
-});
+const swaggerSpec = swaggerJsdoc(options);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// API для получения результата
-app.get('/api/result', (req, res) => {
-  if (!testResult) {
-    return res.status(400).json({ error: 'Результат теста не найден' });
+/**
+ * @swagger
+ * /calculate_results:
+ *   post:
+ *     summary: Подсчет результата теста Бека
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               q1: { type: integer }
+ *               q2: { type: integer }
+ *               q3: { type: integer }
+ *               q4: { type: integer }
+ *               q5: { type: integer }
+ *               q6: { type: integer }
+ *               q7: { type: integer }
+ *               q8: { type: integer }
+ *               q9: { type: integer }
+ *               q10: { type: integer }
+ *               q11: { type: integer }
+ *               q12: { type: integer }
+ *               q13: { type: integer }
+ *               q14: { type: integer }
+ *               q15: { type: integer }
+ *               q16: { type: integer }
+ *               q17: { type: integer }
+ *               q18: { type: integer }
+ *               q19: { type: integer }
+ *               q20: { type: integer }
+ *               q21: { type: integer }
+ *     responses:
+ *       200:
+ *         description: Результаты теста
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 score: { type: integer }
+ *                 interpretation: { type: string }
+ */
+app.post('/calculate_results', (req, res) => {
+  const answers = req.body;
+
+  let totalScore = 0;
+  for (const key in answers) {
+    totalScore += answers[key];
   }
 
-  let diagnosis = '';
-  if (testResult <= 9) diagnosis = 'Отсутствие депрессивных симптомов';
-  else if (testResult <= 15) diagnosis = 'Лёгкая депрессия (субдепрессия)';
-  else if (testResult <= 19) diagnosis = 'Умеренная депрессия';
-  else if (testResult <= 29) diagnosis = 'Выраженная депрессия (средней тяжести)';
-  else diagnosis = 'Тяжёлая депрессия';
+  let interpretation = '';
+  if (totalScore <= 9) interpretation = 'отсутствие депрессивных симптомов';
+  else if (totalScore <= 15) interpretation = 'лёгкая депрессия (субдепрессия)';
+  else if (totalScore <= 19) interpretation = 'умеренная депрессия';
+  else if (totalScore <= 29) interpretation = 'выраженная депрессия (средней тяжести)';
+  else if (totalScore <= 63) interpretation = 'тяжёлая депрессия';
+  else interpretation = 'Ошибка в данных';
 
-  res.json({ score: testResult, diagnosis });
+  res.json({ score: totalScore, interpretation });
 });
 
-// Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-// HTML страница
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
-
-// Запуск сервера
-app.listen(3000, () => {
-  console.log('Сервер запущен на http://localhost:3000');
-  console.log('Swagger UI доступен по http://localhost:3000/api-docs');
+app.listen(port, () => {
+  console.log(`Сервер запущен: http://localhost:${port}`);
+  console.log(`Swagger: http://localhost:${port}/api-docs`);
 });
